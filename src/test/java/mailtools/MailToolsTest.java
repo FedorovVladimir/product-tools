@@ -7,6 +7,6 @@ public class MailToolsTest {
     @org.junit.Test
     public void sendMsg() {
         MailTools mailTools = new MailTools();
-        mailTools.sendMsg();
+        mailTools.sendMsg("/home/dmitry/Documents/testDir/");
     }
 }

@@ -1,7 +1,13 @@
 package mailtools;
 
+import filetools.FilesCollector;
+
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import javax.mail.*;
 import javax.mail.internet.*;
+import java.util.ArrayList;
 import java.util.Properties;
 
 public class MailTools {
@@ -20,7 +26,7 @@ public class MailTools {
         properties.put("mail.smtp.auth", true);
     }
 
-    public void sendMsg() {
+    public void sendMsg(String pathWithFiles) {
         propInit();
 
         Session session = Session.getInstance(properties, null);
@@ -28,7 +34,7 @@ public class MailTools {
 
         try {
             message.setFrom(new InternetAddress(user));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("kobzev96@gmail.com"));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(user + "@gmail.com"));
             message.setSubject("Report");
 
             Multipart multipart = new MimeMultipart("alternative");
@@ -42,6 +48,16 @@ public class MailTools {
             messageBodyPart.setContent(textMessage, "text/html");
 
             multipart.addBodyPart(messageBodyPart);
+
+            ArrayList<String> files = FilesCollector.getAllFiles(pathWithFiles);
+
+            for(String path:files) {
+                messageBodyPart = new MimeBodyPart();
+                DataSource source = new FileDataSource(path);
+                messageBodyPart.setDataHandler(new DataHandler(source));
+                messageBodyPart.setFileName("File "+ files.indexOf(path));
+                multipart.addBodyPart(messageBodyPart);
+            }
 
             message.setContent(multipart);
 
