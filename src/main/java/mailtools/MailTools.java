@@ -7,6 +7,7 @@ import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.mail.*;
 import javax.mail.internet.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -55,7 +56,7 @@ public class MailTools {
                 messageBodyPart = new MimeBodyPart();
                 DataSource source = new FileDataSource(path);
                 messageBodyPart.setDataHandler(new DataHandler(source));
-                messageBodyPart.setFileName("File "+ files.indexOf(path));
+                messageBodyPart.setFileName(new File(path).getName());
                 multipart.addBodyPart(messageBodyPart);
             }
 
